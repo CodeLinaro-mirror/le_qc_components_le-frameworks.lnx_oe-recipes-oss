@@ -1,4 +1,4 @@
-inherit autotools pkgconfig useradd
+inherit autotools pkgconfig
 
 DESCRIPTION = "Android Binder support"
 HOMEPAGE = "http://developer.android.com/"
@@ -8,7 +8,7 @@ ${LICENSE};md5=89aea4e17d99a7cacdbeed46a0096b10"
 
 DEPENDS += "liblog libcutils libutils system-core-headers libselinux glib-2.0"
 
-FILESPATH =+ "${WORKSPACE}/frameworks/:"
+FILESEXTRAPATHS:prepend = "${WORKSPACE}/frameworks/:"
 SRC_URI   = "file://binder"
 
 S = "${WORKDIR}/binder"
@@ -25,7 +25,7 @@ EXTRA_OECONF:append:arm = " \
 "
 
 # sdmsteppe uses 64bit IPC though userspace is 32bit.
-EXTRA_OECONF:remove_sdmsteppe = "--enable-32bit-binder-ipc"
+EXTRA_OECONF:remove:sdmsteppe = "--enable-32bit-binder-ipc"
 
 do_install:append() {
    if ${@bb.utils.contains('EXTRA_OECONF', '--with-systemd', 'true', 'false', d)}; then
