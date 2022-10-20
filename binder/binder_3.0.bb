@@ -1,4 +1,4 @@
-inherit autotools pkgconfig useradd
+inherit autotools pkgconfig useradd systemd
 
 DESCRIPTION = "Android Binder support"
 HOMEPAGE = "http://developer.android.com/"
@@ -8,7 +8,7 @@ ${LICENSE};md5=89aea4e17d99a7cacdbeed46a0096b10"
 
 DEPENDS += "liblog libcutils libutils system-core-headers libselinux glib-2.0"
 
-FILESPATH =+ "${WORKSPACE}/frameworks/:"
+FILESEXTRAPATHS:prepend = "${WORKSPACE}/frameworks/:"
 SRC_URI   = "file://binder"
 
 S = "${WORKDIR}/binder"
