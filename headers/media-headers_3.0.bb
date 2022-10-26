@@ -21,4 +21,4 @@ EXTRA_OECONF:append:kalama = " BOARD_SUPPORTS_ANDROID_Q_AUDIO=true"
 
 do_compile[noexec] = "1"
 
-ALLOW_EMPTY_${PN} = "1"
+ALLOW_EMPTY:${PN} = "1"
