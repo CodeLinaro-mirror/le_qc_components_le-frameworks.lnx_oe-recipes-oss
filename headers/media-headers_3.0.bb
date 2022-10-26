@@ -12,11 +12,12 @@ SRC_URI = "file://include/media"
 
 S = "${WORKDIR}/include/media"
 
-EXTRA_OECONF_append_kona = " BOARD_SUPPORTS_ANDROID_Q_AUDIO=true"
-EXTRA_OECONF_append_sdxlemur = " BOARD_SUPPORTS_ANDROID_Q_AUDIO=true"
-EXTRA_OECONF_append_qrbx210-rbx = " BOARD_SUPPORTS_ANDROID_Q_AUDIO=true"
-EXTRA_OECONF_append_neo = " BOARD_SUPPORTS_ANDROID_Q_AUDIO=true"
+EXTRA_OECONF:append_kona = " BOARD_SUPPORTS_ANDROID_Q_AUDIO=true"
+EXTRA_OECONF:append_sdxlemur = " BOARD_SUPPORTS_ANDROID_Q_AUDIO=true"
+EXTRA_OECONF:append_qrbx210-rbx = " BOARD_SUPPORTS_ANDROID_Q_AUDIO=true"
+EXTRA_OECONF:append_sdmsteppe = " BOARD_SUPPORTS_ANDROID_Q_AUDIO=true"
+EXTRA_OECONF:append_neo = " BOARD_SUPPORTS_ANDROID_Q_AUDIO=true"
 
 do_compile[noexec] = "1"
 
-ALLOW_EMPTY_${PN} = "1"
+ALLOW_EMPTY:${PN} = "1"
