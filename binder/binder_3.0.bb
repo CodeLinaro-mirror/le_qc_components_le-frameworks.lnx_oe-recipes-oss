@@ -20,23 +20,36 @@ EXTRA_OECONF += "--with-glib \
 # multilib compilation is enabled. If kernel is 64bit and binder is compiled
 # for 32bit due to multilib settings default 64bit IPC need to be supported
 # as kernel is 64bit. Only when kernel is 32bit, 32bit IPC need to be enabled.
-EXTRA_OECONF_append_arm = " \
+EXTRA_OECONF:append:arm = " \
     ${@bb.utils.contains('MULTILIB_VARIANTS', 'lib32','','--enable-32bit-binder-ipc',d)} \
 "
 
 # sdmsteppe uses 64bit IPC though userspace is 32bit.
-EXTRA_OECONF_remove_sdmsteppe = "--enable-32bit-binder-ipc"
+EXTRA_OECONF:remove:sdmsteppe = "--enable-32bit-binder-ipc"
 
-do_install_append() {
+EXTRA_OECONF:append:kalama= "--with-binderfs"
+
+do_install:append() {
    if ${@bb.utils.contains('EXTRA_OECONF', '--with-systemd', 'true', 'false', d)}; then
-       if ${@bb.utils.contains('MACHINE_FEATURES', 'qti-vm', 'false', 'true', d)}; then
-           install -d ${D}${systemd_unitdir}/system/
-           install -d ${D}${systemd_unitdir}/system/multi-user.target.wants/
-           # enable the service for multi-user.target
-           ln -sf ${systemd_unitdir}/system/servicemanager.service \
-               ${D}${systemd_unitdir}/system/multi-user.target.wants/servicemanager.service
+        if ${@bb.utils.contains('MACHINE_FEATURES', 'qti-vm', 'false', 'true', d)}; then
+           if ${@bb.utils.contains('EXTRA_OECONF', '--with-binderfs', 'true', 'false', d)}; then
+               install -d ${D}${systemd_unitdir}/system/
+               install -d ${D}${systemd_unitdir}/system/multi-user.target.wants/
+               install -d ${D}${systemd_unitdir}/system/local-fs.target.wants/
+               # enable the service for multi-user.target
+               ln -sf ${systemd_unitdir}/system/servicemanager.service \
+                   ${D}${systemd_unitdir}/system/multi-user.target.wants/servicemanager.service
+               ln -sf ${systemd_unitdir}/system/binderfs.service \
+                   ${D}${systemd_unitdir}/system/local-fs.target.wants/binderfs.service
+           else
+               install -d ${D}${systemd_unitdir}/system/
+               install -d ${D}${systemd_unitdir}/system/multi-user.target.wants/
+               # enable the service for multi-user.target
+               ln -sf ${systemd_unitdir}/system/servicemanager.service \
+                   ${D}${systemd_unitdir}/system/multi-user.target.wants/servicemanager.service
+           fi
        fi
    fi
 }
 
-FILES_${PN} += "${systemd_unitdir}/system/"
+FILES:${PN} += "${systemd_unitdir}/system/"
