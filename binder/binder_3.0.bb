@@ -13,8 +13,13 @@ SRC_URI   = "file://binder"
 
 S = "${WORKDIR}/binder"
 
+WITH_SYSTEMD ?= "${@bb.utils.contains('DISTRO_FEATURES', 'systemd', '--with-systemd', '',d)}"
+WITH_SYSTEMD:sxrneo = ""
+WITH_SYSTEMD:trustedvm = ""
+
 EXTRA_OECONF += "--with-glib \
-                 ${@bb.utils.contains('DISTRO_FEATURES', 'systemd', '--with-systemd', '',d)}"
+                 ${WITH_SYSTEMD} \
+                "
 
 # This recipe assumes kernel always compile for default arch even when
 # multilib compilation is enabled. If kernel is 64bit and binder is compiled
@@ -31,24 +36,16 @@ EXTRA_OECONF:append:kalama= "--with-binderfs"
 
 do_install:append() {
    if ${@bb.utils.contains('EXTRA_OECONF', '--with-systemd', 'true', 'false', d)}; then
-        if ${@bb.utils.contains('MACHINE_FEATURES', 'qti-vm', 'false', 'true', d)}; then
-           if ${@bb.utils.contains('EXTRA_OECONF', '--with-binderfs', 'true', 'false', d)}; then
-               install -d ${D}${systemd_unitdir}/system/
-               install -d ${D}${systemd_unitdir}/system/multi-user.target.wants/
-               install -d ${D}${systemd_unitdir}/system/local-fs.target.wants/
-               # enable the service for multi-user.target
-               ln -sf ${systemd_unitdir}/system/servicemanager.service \
-                   ${D}${systemd_unitdir}/system/multi-user.target.wants/servicemanager.service
-               ln -sf ${systemd_unitdir}/system/binderfs.service \
-                   ${D}${systemd_unitdir}/system/local-fs.target.wants/binderfs.service
-           else
-               install -d ${D}${systemd_unitdir}/system/
-               install -d ${D}${systemd_unitdir}/system/multi-user.target.wants/
-               # enable the service for multi-user.target
-               ln -sf ${systemd_unitdir}/system/servicemanager.service \
-                   ${D}${systemd_unitdir}/system/multi-user.target.wants/servicemanager.service
-           fi
-       fi
+      install -d ${D}${systemd_unitdir}/system/
+      install -d ${D}${systemd_unitdir}/system/multi-user.target.wants/
+      # enable the service for multi-user.target
+      ln -sf ${systemd_unitdir}/system/servicemanager.service \
+         ${D}${systemd_unitdir}/system/multi-user.target.wants/servicemanager.service
+      if ${@bb.utils.contains('EXTRA_OECONF', '--with-binderfs', 'true', 'false', d)}; then
+         install -d ${D}${systemd_unitdir}/system/local-fs.target.wants/
+         ln -sf ${systemd_unitdir}/system/binderfs.service \
+            ${D}${systemd_unitdir}/system/local-fs.target.wants/binderfs.service
+      fi
    fi
 }
 
