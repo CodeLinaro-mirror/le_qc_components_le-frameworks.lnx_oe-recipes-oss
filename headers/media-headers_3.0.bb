@@ -17,6 +17,7 @@ EXTRA_OECONF_append_sdxlemur = " BOARD_SUPPORTS_ANDROID_Q_AUDIO=true"
 EXTRA_OECONF_append_qrbx210-rbx = " BOARD_SUPPORTS_ANDROID_Q_AUDIO=true"
 EXTRA_OECONF_append_sdmsteppe = " BOARD_SUPPORTS_ANDROID_Q_AUDIO=true"
 EXTRA_OECONF_append_neo = " BOARD_SUPPORTS_ANDROID_Q_AUDIO=true"
+EXTRA_OECONF:append:kalama = " BOARD_SUPPORTS_ANDROID_Q_AUDIO=true"
 
 do_compile[noexec] = "1"
 
