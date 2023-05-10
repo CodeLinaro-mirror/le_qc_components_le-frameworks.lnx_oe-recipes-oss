@@ -13,13 +13,12 @@ SRC_URI   = "file://binder"
 
 S = "${WORKDIR}/binder"
 
-WITH_SYSTEMD ?= "${@bb.utils.contains('DISTRO_FEATURES', 'systemd', '--with-systemd', '',d)}"
-WITH_SYSTEMD:sxrneo = ""
-WITH_SYSTEMD:trustedvm = ""
+PACKAGECONFIG ??= "glib ${@bb.utils.filter('DISTRO_FEATURES','systemd', d)}"
 
-EXTRA_OECONF += "--with-glib \
-                 ${WITH_SYSTEMD} \
-                "
+PACKAGECONFIG[glib]    = "--with-glib, --without-glib, glib-2.0"
+PACKAGECONFIG[systemd] = "--with-systemd, --without-systemd, systemd"
+
+PACKAGECONFIG:trustedvm = "glib"
 
 # This recipe assumes kernel always compile for default arch even when
 # multilib compilation is enabled. If kernel is 64bit and binder is compiled
@@ -33,4 +32,4 @@ EXTRA_OECONF:append:arm = " \
 EXTRA_OECONF:remove:sdmsteppe = "--enable-32bit-binder-ipc"
 
 FILES:${PN} += "${systemd_unitdir}/system/"
-SYSTEMD_SERVICE_${PN} += "binderfs.service servicemanager.service"
+SYSTEMD_SERVICE_${PN} = " ${@bb.utils.contains('PACKAGECONFIG', 'systemd', 'binderfs.service servicemanager.service', '', d)}"
