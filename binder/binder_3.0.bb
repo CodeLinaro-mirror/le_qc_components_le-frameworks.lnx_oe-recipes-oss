@@ -32,21 +32,5 @@ EXTRA_OECONF:append:arm = " \
 # sdmsteppe uses 64bit IPC though userspace is 32bit.
 EXTRA_OECONF:remove:sdmsteppe = "--enable-32bit-binder-ipc"
 
-EXTRA_OECONF:append:kalama= "--with-binderfs"
-
-do_install:append() {
-   if ${@bb.utils.contains('EXTRA_OECONF', '--with-systemd', 'true', 'false', d)}; then
-      install -d ${D}${systemd_unitdir}/system/
-      install -d ${D}${systemd_unitdir}/system/multi-user.target.wants/
-      # enable the service for multi-user.target
-      ln -sf ${systemd_unitdir}/system/servicemanager.service \
-         ${D}${systemd_unitdir}/system/multi-user.target.wants/servicemanager.service
-      if ${@bb.utils.contains('EXTRA_OECONF', '--with-binderfs', 'true', 'false', d)}; then
-         install -d ${D}${systemd_unitdir}/system/local-fs.target.wants/
-         ln -sf ${systemd_unitdir}/system/binderfs.service \
-            ${D}${systemd_unitdir}/system/local-fs.target.wants/binderfs.service
-      fi
-   fi
-}
-
 FILES:${PN} += "${systemd_unitdir}/system/"
+SYSTEMD_SERVICE_${PN} += "binderfs.service servicemanager.service"
