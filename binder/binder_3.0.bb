@@ -13,13 +13,12 @@ SRC_URI   = "file://binder"
 
 S = "${WORKDIR}/binder"
 
-WITH_SYSTEMD ?= "${@bb.utils.contains('DISTRO_FEATURES', 'systemd', '--with-systemd', '',d)}"
-WITH_SYSTEMD:sxrneo = ""
-WITH_SYSTEMD:trustedvm = ""
+PACKAGECONFIG ??= "glib ${@bb.utils.filter('DISTRO_FEATURES','systemd', d)}"
 
-EXTRA_OECONF += "--with-glib \
-                 ${WITH_SYSTEMD} \
-                "
+PACKAGECONFIG[glib]    = "--with-glib, --without-glib, glib-2.0"
+PACKAGECONFIG[systemd] = "--with-systemd, --without-systemd, systemd"
+
+PACKAGECONFIG:trustedvm = "glib"
 
 # This recipe assumes kernel always compile for default arch even when
 # multilib compilation is enabled. If kernel is 64bit and binder is compiled
@@ -32,21 +31,5 @@ EXTRA_OECONF:append:arm = " \
 # sdmsteppe uses 64bit IPC though userspace is 32bit.
 EXTRA_OECONF:remove:sdmsteppe = "--enable-32bit-binder-ipc"
 
-EXTRA_OECONF:append:kalama= "--with-binderfs"
-
-do_install:append() {
-   if ${@bb.utils.contains('EXTRA_OECONF', '--with-systemd', 'true', 'false', d)}; then
-      install -d ${D}${systemd_unitdir}/system/
-      install -d ${D}${systemd_unitdir}/system/multi-user.target.wants/
-      # enable the service for multi-user.target
-      ln -sf ${systemd_unitdir}/system/servicemanager.service \
-         ${D}${systemd_unitdir}/system/multi-user.target.wants/servicemanager.service
-      if ${@bb.utils.contains('EXTRA_OECONF', '--with-binderfs', 'true', 'false', d)}; then
-         install -d ${D}${systemd_unitdir}/system/local-fs.target.wants/
-         ln -sf ${systemd_unitdir}/system/binderfs.service \
-            ${D}${systemd_unitdir}/system/local-fs.target.wants/binderfs.service
-      fi
-   fi
-}
-
 FILES:${PN} += "${systemd_unitdir}/system/"
+SYSTEMD_SERVICE_${PN} = " ${@bb.utils.contains('PACKAGECONFIG', 'systemd', 'binderfs.service servicemanager.service', '', d)}"
