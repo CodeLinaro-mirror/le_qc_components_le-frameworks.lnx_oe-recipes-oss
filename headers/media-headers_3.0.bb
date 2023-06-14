@@ -19,6 +19,7 @@ EXTRA_OECONF:append:sdmsteppe = " BOARD_SUPPORTS_ANDROID_Q_AUDIO=true"
 EXTRA_OECONF:append:neo = " BOARD_SUPPORTS_ANDROID_Q_AUDIO=true"
 EXTRA_OECONF:append:waipio = " BOARD_SUPPORTS_ANDROID_Q_AUDIO=true"
 EXTRA_OECONF:append:kalama = " BOARD_SUPPORTS_ANDROID_Q_AUDIO=true"
+EXTRA_OECONF:append:qcs40x = " BOARD_SUPPORTS_ANDROID_Q_AUDIO=true"
 
 do_compile[noexec] = "1"
 
