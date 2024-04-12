@@ -10,6 +10,7 @@ DEPENDS += "liblog libcutils libutils system-core-headers libselinux glib-2.0"
 
 FILESEXTRAPATHS:prepend = "${WORKSPACE}/frameworks/:"
 SRC_URI   = "file://binder"
+SRC_URI  += "file://servicemanager.conf"
 
 S = "${WORKDIR}/binder"
 
@@ -31,5 +32,9 @@ EXTRA_OECONF:append:arm = " \
 # sdmsteppe uses 64bit IPC though userspace is 32bit.
 EXTRA_OECONF:remove:sdmsteppe = "--enable-32bit-binder-ipc"
 
+do_install:append() {
+    install -d ${D}${systemd_unitdir}/system/servicemanager.service.d
+    install  -m 0666 ${WORKDIR}/servicemanager.conf ${D}${systemd_unitdir}/system/servicemanager.service.d/servicemanager.conf
+}
 FILES:${PN} += "${systemd_unitdir}/system/"
-SYSTEMD_SERVICE_${PN} = " ${@bb.utils.contains('PACKAGECONFIG', 'systemd', 'binderfs.service servicemanager.service', '', d)}"
+SYSTEMD_SERVICE:${PN} += " ${@bb.utils.contains('PACKAGECONFIG', 'systemd', 'binderfs.service servicemanager.service', '', d)}"
