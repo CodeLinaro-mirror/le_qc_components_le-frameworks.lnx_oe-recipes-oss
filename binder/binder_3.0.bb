@@ -32,7 +32,7 @@ EXTRA_OECONF:append:arm = " \
 # sdmsteppe uses 64bit IPC though userspace is 32bit.
 EXTRA_OECONF:remove:sdmsteppe = "--enable-32bit-binder-ipc"
 
-do_install:append() {
+do_install:append:sa525m() {
     install -d ${D}${systemd_unitdir}/system/servicemanager.service.d
     install  -m 0666 ${WORKDIR}/servicemanager.conf ${D}${systemd_unitdir}/system/servicemanager.service.d/servicemanager.conf
 }
