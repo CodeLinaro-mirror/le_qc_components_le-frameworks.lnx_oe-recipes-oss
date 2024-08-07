@@ -10,10 +10,10 @@ DEPENDS += "liblog libcutils libutils system-core-headers libselinux glib-2.0"
 
 FILESEXTRAPATHS:prepend = "${WORKSPACE}/frameworks/:"
 SRC_URI   = "file://binder"
-SRC_URI  += "file://servicemanager.conf \
-            file://CVE-2020-0136.patch \
+SRC_URI  += "file://servicemanager_auto.service \
+             file://CVE-2020-0136.patch \
 "
- 
+
 S = "${WORKDIR}/binder"
 
 PACKAGECONFIG ??= "glib ${@bb.utils.filter('DISTRO_FEATURES','systemd', d)}"
@@ -35,8 +35,8 @@ EXTRA_OECONF:append:arm = " \
 EXTRA_OECONF:remove:sdmsteppe = "--enable-32bit-binder-ipc"
 
 do_install:append:sa525m() {
-    install -d ${D}${systemd_unitdir}/system/servicemanager.service.d
-    install  -m 0666 ${WORKDIR}/servicemanager.conf ${D}${systemd_unitdir}/system/servicemanager.service.d/servicemanager.conf
+    rm -rf ${D}${systemd_unitdir}/system/servicemanager.service
+    install -m 0664 ${WORKDIR}/servicemanager_auto.service ${D}${systemd_unitdir}/system/servicemanager.service
 }
 FILES:${PN} += "${systemd_unitdir}/system/"
-SYSTEMD_SERVICE:${PN} += " ${@bb.utils.contains('PACKAGECONFIG', 'systemd', 'binderfs.service servicemanager.service', '', d)}"
+SYSTEMD_SERVICE:${PN} += " ${@bb.utils.contains('PACKAGECONFIG', 'systemd', 'servicemanager.service', '', d)}"
