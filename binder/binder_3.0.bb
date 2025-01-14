@@ -31,5 +31,9 @@ EXTRA_OECONF:append:arm = " \
 # sdmsteppe uses 64bit IPC though userspace is 32bit.
 EXTRA_OECONF:remove:sdmsteppe = "--enable-32bit-binder-ipc"
 
+EXTRA_OECONF += " \
+    --with-rootprefix=${root_prefix} \
+"
+
 FILES:${PN} += "${systemd_unitdir}/system/"
 SYSTEMD_SERVICE:${PN} = " ${@bb.utils.contains('PACKAGECONFIG', 'systemd', 'binderfs.service servicemanager.service', '', d)}"
