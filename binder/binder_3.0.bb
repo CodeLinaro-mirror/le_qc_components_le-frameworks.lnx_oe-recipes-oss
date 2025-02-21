@@ -34,6 +34,7 @@ EXTRA_OECONF:remove:sdmsteppe = "--enable-32bit-binder-ipc"
 EXTRA_OECONF += " \
     --with-rootprefix=${root_prefix} \
 "
+EXTRA_OECONF += "${@bb.utils.contains('DISTRO_FEATURES', 'selinux', '--enable-selinux', '', d)}"
 
 FILES:${PN} += "${systemd_unitdir}/system/"
 SYSTEMD_SERVICE:${PN} = " ${@bb.utils.contains('PACKAGECONFIG', 'systemd', 'binderfs.service servicemanager.service', '', d)}"
