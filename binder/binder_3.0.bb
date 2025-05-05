@@ -6,10 +6,8 @@ LICENSE = "Apache-2.0"
 LIC_FILES_CHKSUM = "file://${COREBASE}/meta/files/common-licenses/\
 ${LICENSE};md5=89aea4e17d99a7cacdbeed46a0096b10"
 
-DEPENDS += " \
-        liblog libcutils libutils system-core-headers glib-2.0 \
-        ${@bb.utils.contains('DISTRO_FEATURES', 'selinux', 'libselinux', '', d)} \
-"
+DEPENDS += "liblog libcutils libutils system-core-headers glib-2.0"
+DEPENDS += "${@bb.utils.contains('DISTRO_FEATURES', 'selinux', 'libselinux', '', d)}"
 
 FILESEXTRAPATHS:prepend = "${WORKSPACE}/frameworks/:"
 SRC_URI   = "file://binder"
@@ -37,6 +35,7 @@ EXTRA_OECONF:remove:sdmsteppe = "--enable-32bit-binder-ipc"
 EXTRA_OECONF += " \
     --with-rootprefix=${root_prefix} \
 "
+EXTRA_OECONF += "${@bb.utils.contains('DISTRO_FEATURES', 'selinux', '--enable-selinux', '', d)}"
 
 FILES:${PN} += "${systemd_unitdir}/system/"
 SYSTEMD_SERVICE:${PN} = " ${@bb.utils.contains('PACKAGECONFIG', 'systemd', 'binderfs.service servicemanager.service', '', d)}"
