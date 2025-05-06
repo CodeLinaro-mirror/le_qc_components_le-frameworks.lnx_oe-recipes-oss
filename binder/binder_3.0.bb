@@ -10,9 +10,7 @@ DEPENDS += "liblog libcutils libutils system-core-headers libselinux glib-2.0"
 
 FILESEXTRAPATHS:prepend = "${WORKSPACE}/frameworks/:"
 SRC_URI   = "file://binder"
-SRC_URI  += "file://servicemanager_auto.service \
-             file://CVE-2020-0136.patch \
-"
+SRC_URI  += "file://servicemanager_auto.service"
 
 S = "${WORKDIR}/binder"
 
