@@ -9,6 +9,6 @@ ${LICENSE};md5=3775480a712fc46a69647678acb234cb"
 FILESEXTRAPATHS:prepend = "${WORKSPACE}/frameworks/:"
 SRC_URI = "file://input_helper"
 
-S = "${WORKDIR}/input_helper"
+S = "${UNPACKDIR}/input_helper"
 
 DEPENDS = "libinput libevdev"
