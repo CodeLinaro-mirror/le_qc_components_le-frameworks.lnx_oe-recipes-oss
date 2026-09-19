@@ -12,4 +12,3 @@ FILESEXTRAPATHS:prepend = "${WORKSPACE}/frameworks/:"
 SRC_URI   = "file://audio_utils/"
 
 S = "${WORKDIR}/audio_utils"
-
