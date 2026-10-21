@@ -1,0 +1,27 @@
+This patch file is from Qualcomm Technologies, Inc. and is provided under the 
+following license:
+Copyright (c) Qualcomm Technologies, Inc. and/or its subsidiaries.
+SPDX-License-Identifier: BSD-3-Clause-Clear
+
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Jhansi kotipalli <jkotipal@qti.qualcomm.com>
+Date: Mon, 12 Oct 2026 20:50:00 +0530
+Subject: [PATCH] binder: guard SELinux label header
+
+The no-SELinux distro does not stage libselinux headers.  The service
+manager already compiles its SELinux code conditionally, so include the
+label header under the same conditional.
+
+Upstream-Status: Inappropriate [platform-specific no-SELinux build]
+Signed-off-by: jkotipal <jkotipal@qti.qualcomm.com>
+---
+ cmds/servicemanager/service_manager.c | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/cmds/servicemanager/service_manager.c b/cmds/servicemanager/service_manager.c
+--- a/cmds/servicemanager/service_manager.c
++++ b/cmds/servicemanager/service_manager.c
+@@ -11,1 +11,3 @@
++#ifdef SELINUX_IS_ENABLE
+ #include <selinux/label.h>
++#endif

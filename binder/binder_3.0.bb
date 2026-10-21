@@ -11,8 +11,9 @@ DEPENDS += "${@bb.utils.contains('DISTRO_FEATURES', 'selinux', 'libselinux', '',
 
 FILESEXTRAPATHS:prepend = "${WORKSPACE}/frameworks/:"
 SRC_URI   = "file://binder"
+SRC_URI  += "file://0001-binder-guard-selinux-header.patch"
 
-S = "${WORKDIR}/binder"
+S = "${UNPACKDIR}/binder"
 
 PACKAGECONFIG ??= "glib ${@bb.utils.filter('DISTRO_FEATURES','systemd', d)}"
 
