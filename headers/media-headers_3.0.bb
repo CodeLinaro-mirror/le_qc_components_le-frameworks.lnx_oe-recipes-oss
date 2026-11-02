@@ -27,6 +27,7 @@ EXTRA_OECONF:append:pineapple = " BOARD_SUPPORTS_ANDROID_Q_AUDIO=true"
 EXTRA_OECONF:append:qcm2290-mtp = " BOARD_SUPPORTS_ANDROID_Q_AUDIO=true"
 EXTRA_OECONF:append:qcm4325-mtp = " BOARD_SUPPORTS_ANDROID_Q_AUDIO=true"
 EXTRA_OECONF:append:seraph = " BOARD_SUPPORTS_ANDROID_Q_AUDIO=true"
+EXTRA_OECONF:append:sdxpinn = " BOARD_SUPPORTS_ANDROID_Q_AUDIO=true"
 
 do_compile[noexec] = "1"
 
